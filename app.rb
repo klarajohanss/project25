@@ -4,13 +4,14 @@ require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
 enable :sessions
+set :public_folder, "public"
 
 get('/home') do
     slim(:index)
 end
 
 get('/show_login') do
-    slim(:index)
+    slim(:login)
 end
 
 get('/show_varukorg') do

@@ -1,8 +1,11 @@
 h2 Våra produkter
 
-- produkt.each do |produkt|
-    div.product
-        h3 = produkt["namn"]
-        img = produkt["img_url"]
-        h4 = "#{produkt["pris"]} kr"
-        
+.products
+
+    - produkt.each do |produkt|
+        .product 
+            h3.product_name = produkt["namn"] 
+            img.product_image src="img/#{produkt["img_url"]}" alt= produkt["img_url"]
+            .price_etc
+                p.price = "#{produkt["pris"]} kr"
+                button.put_in_cart Lägg i varukorgen

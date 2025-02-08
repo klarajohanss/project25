@@ -1,0 +1,22 @@
+
+.product_content 
+    img.product_image src="img/#{produkt["img_url"]}" alt=produkt["img_url"]
+    .product_info_container
+        h2.product_name = produkt["namn"] 
+        p.product_info_short Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores facilis ex iusto minima voluptatum et!
+        p.price = "#{produkt["pris"]} kr"
+        .product_buttons 
+            form action="/#{produkt['namn']}/update_cart" method="post"
+                input type="integer" name="quantity" placeholder=""
+                input type="submit" value="Lägg i varukorgen"
+
+.product_specifications 
+    h4 Tekniska specifikationer 
+    ul
+        li = "Artikel nr: #{produkt["artikel_nr"]}"
+        li = "Färg: #{produkt["färg"]}"
+        li = "Vikt: #{produkt["vikt"]}"
+        li = "Maximal lastvikt: #{produkt["lastvikt"]}"
+        li = "Höjd: #{produkt["höjd"]}"
+        li = "Bredd: #{produkt["bredd"]}"
+        li = "Djup: #{produkt["djup"]}"

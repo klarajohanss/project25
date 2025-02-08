@@ -27,7 +27,11 @@ get('/show_produkter') do
 end
 
 get('/show_produkt') do
-    slim(:produkt)
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM produkt")
+
+    slim(:produkt, locals:{produkt:result})
 end
 
 get('/show_om_oss') do
@@ -37,3 +41,7 @@ end
 get('/show_kontakt') do
     slim(:kontakt)
 end
+
+#:id nedanför istället för namn
+post('#{produkt['namn']}/update_cart') do
+    redirect('/show_produkt')

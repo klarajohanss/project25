@@ -14,6 +14,10 @@ get('/show_login') do
     slim(:login)
 end
 
+get('/register') do
+    slim(:register)
+end
+
 post('/login') do
     username = params[:username]
     password = params[:password]
@@ -23,11 +27,13 @@ post('/login') do
     pwdigest = result["pwdigest"]
     id = result["id"]
   
-    if (BCrypt::Password.new(pwdigest)) == password
-      session[:id] = id
-      redirect('/index')
+    if (BCrypt::Password.new(pwdigest)) != password
+        "Fel lösenord"
+    #elsif username... (validera om username finns)
     else
-      "Wrong password"
+        session[:id] = id
+        redirect('/home')
+      
     end
 end
 
@@ -35,14 +41,21 @@ post('/users/new') do
     username = params[:username]
     password = params[:password]
     password_confirm = params[:password_confirm]
+    email = params[:email]
+    phone = params[:phone]
+
   
-    if (password == password_confirm)
-      password_digest = BCrypt::Password.create(password)
-      db = SQLite3::Database.new("db/webbshop.db")
-      db.execute("INSERT INTO users (username,pwdigest) VALUES (?,?)",[username,password_digest])
-      redirect('/')
+    if (password != password_confirm)
+        "Lösenorden matchar inte..."
+    elsif username.length <= 2
+        "Ditt användarnamn måste innehålla minst 3 karaktärer"
+    elsif !(email.include?("@"))
+        "Din e-post måste innehålla @"
     else
-      "Passwords do not match..."
+        password_digest = BCrypt::Password.create(password)
+      db = SQLite3::Database.new("db/webbshop.db")
+      db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
+      redirect('/home')
     end
 end
 

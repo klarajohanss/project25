@@ -1,8 +1,23 @@
 body {
-    background-color: aquamarine;
+    background-color:beige;
+}
+
+
+.products {
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 16vw;
+    margin-right: 16vw;
+}
+
+.product {
+    height: 100px;
+    width: 200px;
+    padding: 10px;
 }
 
 .product_image {
-    height: 100px;
-    width: 200px;
+    height: 75%;
+    width: 100%;
 }
+

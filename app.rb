@@ -5,9 +5,20 @@ require 'sinatra/reloader'
 require 'bcrypt'
 enable :sessions
 set :public_folder, "public"
+@logged_in = false
 
 get('/home') do
     slim(:index)
+end
+
+get('/home/logged_in') do
+    id = session[:id].to_i
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM users WHERE id = ?",id)
+    p "användarnamn: #{result}"
+    @logged_in = true
+    slim(:mina_sidor, locals:{users:result})
 end
 
 get('/show_login') do
@@ -26,13 +37,15 @@ post('/login') do
     result = db.execute("SELECT * FROM users WHERE username = ?",username).first
     pwdigest = result["pwdigest"]
     id = result["id"]
+    username = result["username"]
   
     if (BCrypt::Password.new(pwdigest)) != password
         "Fel lösenord"
     #elsif username... (validera om username finns)
     else
         session[:id] = id
-        redirect('/home')
+        session[:username] = username
+        redirect('/home/logged_in')
       
     end
 end

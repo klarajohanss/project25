@@ -85,10 +85,11 @@ get('/show_produkter') do
 end
 
 #skicka med vilken row (produkt) från show_products, ändra sql
-get('/show_produkt') do
+get('/show_produkt/:id') do
+    id = params[:id].to_i
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM produkt")
+    result = db.execute("SELECT * FROM produkt WHERE id = ?",id).first
 
     slim(:produkt, locals:{produkt:result})
 end

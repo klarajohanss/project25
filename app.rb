@@ -5,7 +5,6 @@ require 'sinatra/reloader'
 require 'bcrypt'
 enable :sessions
 set :public_folder, "public"
-#@logged_in = false
 
 get('/home') do
     slim(:index)
@@ -17,7 +16,6 @@ get('/home/logged_in') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE id = ?",id)
     p "användarnamn: #{result}"
-    #@logged_in = true
     slim(:mina_sidor, locals:{users:result})
 end
 
@@ -46,10 +44,14 @@ post('/login') do
         session[:id] = id
         session[:username] = username
         session[:logged_in] = true
-        #@logged_in = true
         redirect('/home/logged_in')
       
     end
+end
+
+post('/logout') do
+    session.clear
+    redirect('/home')
 end
 
 post('/users/new') do
@@ -74,9 +76,10 @@ post('/users/new') do
     end
 end
 
-get('/show_varukorg') do
-    slim(:varukorg)
-end
+#get('/show_varukorg') do
+#    @cart = session[:cart] || {}
+ #   slim(:varukorg)
+#end
 
 get('/show_produkter') do
     db = SQLite3::Database.new("db/webbshop.db")
@@ -105,6 +108,22 @@ get('/show_kontakt') do
 end
 
 #:id nedanför istället för namn
-#post('#{produkt['namn']}/update_cart') do
- #   redirect('/show_produkt')
+post('/update_cart') do
+    id = params[:quality]
+    product_id = params[:product_id]
+
+    session[:cart] = {}
+
+    if session[:cart].key?(product_id)
+        session[:cart][product_id] += quantity
+    else
+        session[:cart][product_id] = quantity
+    end
+
+    redirect "/show_produkt/#{product_id}"
+end
+
+#post('/clear_cart') do
+ #   session[:cart] = {}  # Nollställ varukorgen
+  #  redirect '/show_varukorg'
 #end

@@ -6,8 +6,9 @@
         p.product_info_short Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores facilis ex iusto minima voluptatum et!
         p.price = "#{produkt["pris"]} kr"
         .product_buttons 
-            form action="/#{produkt['namn']}/update_cart" method="post"
-                input type="integer" name="quantity" placeholder=""
+            form action="/update_cart" method="post"
+                input type="hidden" name="product_id" value=produkt["id"]
+                input type="number" name="quantity" min="1" max="10" step="1" value="1" 
                 input type="submit" value="Lägg i varukorgen"
 
 .product_specifications 

@@ -5,7 +5,7 @@ require 'sinatra/reloader'
 require 'bcrypt'
 enable :sessions
 set :public_folder, "public"
-@logged_in = false
+#@logged_in = false
 
 get('/home') do
     slim(:index)
@@ -17,7 +17,7 @@ get('/home/logged_in') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE id = ?",id)
     p "användarnamn: #{result}"
-    @logged_in = true
+    #@logged_in = true
     slim(:mina_sidor, locals:{users:result})
 end
 
@@ -45,6 +45,8 @@ post('/login') do
     else
         session[:id] = id
         session[:username] = username
+        session[:logged_in] = true
+        #@logged_in = true
         redirect('/home/logged_in')
       
     end

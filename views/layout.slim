@@ -10,8 +10,12 @@ html lang="en"
             img src="" alt="Multibox Logo"
             div.header_info
                 a href="/search" Sök
-                a href="/show_login" Logga in
                 a href="/show_varukorg" Varukorg
+            div.login_user
+            - if session[:logged_in]
+                a href="/home/logged_in" = session[:username]
+            - else
+                a href="/show_login" Logga in
         nav
             a href="/home" Hem
             a href="/show_produkter" Produkter

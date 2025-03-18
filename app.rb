@@ -76,10 +76,22 @@ post('/users/new') do
     end
 end
 
-#get('/show_varukorg') do
-#    @cart = session[:cart] || {}
- #   slim(:varukorg)
-#end
+get('/show_varukorg') do
+    @cart = session[:cart] || {}
+    slim(:varukorg)
+end
+
+
+
+get('/show_varukorg') do
+    session[:cart] ||= {}  # Se till att session[:cart] alltid finns
+    @cart = session[:cart].values  # Hämta alla produkter från sessionen direkt
+
+    slim(:varukorg)  # Skicka till Slim för rendering
+end
+
+
+
 
 get('/show_produkter') do
     db = SQLite3::Database.new("db/webbshop.db")
@@ -107,21 +119,34 @@ get('/show_kontakt') do
     slim(:kontakt)
 end
 
-#:id nedanför istället för namn
 post('/update_cart') do
-    id = params[:quality]
-    product_id = params[:product_id]
+    quantity = params[:quantity].to_i
+    product_id = params[:product_id].to_i
 
-    session[:cart] = {}
+    session[:cart] ||= {}
 
-    if session[:cart].key?(product_id)
-        session[:cart][product_id] += quantity
-    else
-        session[:cart][product_id] = quantity
+    # Hämta produktens namn och pris från databasen och spara i sessionen
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+    product = db.execute("SELECT * FROM produkt WHERE id = ?",product_id).first
+
+    if product
+        # Uppdatera kvantiteten om produkten finns i varukorgen, annars lägg till den
+        if session[:cart].key?(product_id)
+            session[:cart][product_id][:quantity] += quantity
+        else
+            session[:cart][product_id] = {
+                name: product["namn"], 
+                quantity: quantity, 
+                price: product["pris"]
+            }
+        end
     end
 
+    # Redirect tillbaka till produktens sida
     redirect "/show_produkt/#{product_id}"
 end
+
 
 #post('/clear_cart') do
  #   session[:cart] = {}  # Nollställ varukorgen

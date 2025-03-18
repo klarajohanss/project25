@@ -1,0 +1,8 @@
+h1 Varukorg
+
+- if @cart.empty?
+    p Din varukorg är tom.
+- else
+    - @cart.each do |item|
+        p
+            | Produkt: #{item[:name]}, Antal: #{item[:quantity]}, Pris: #{item[:price] * item[:quantity]} kr

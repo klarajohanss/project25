@@ -2,7 +2,7 @@
 h2 Våra produkter
 
 .products
-
+    
     - produkt.each do |produkt|
         a.product href="/show_produkt/#{produkt["id"]}"
             h3.product_name = produkt["namn"] 

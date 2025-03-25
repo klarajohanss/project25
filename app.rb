@@ -76,10 +76,10 @@ post('/users/new') do
     end
 end
 
-get('/show_varukorg') do
-    @cart = session[:cart] || {}
-    slim(:varukorg)
-end
+#get('/show_varukorg') do
+#    @cart = session[:cart] || {}
+#    slim(:varukorg)
+#end
 
 
 
@@ -120,7 +120,11 @@ get('/show_kontakt') do
 end
 
 post('/update_cart') do
-    quantity = params[:quantity].to_i
+    if params[:quantity].empty?
+        quantity = 1
+    else
+        quantity = params[:quantity].to_i
+    end
     product_id = params[:product_id].to_i
 
     session[:cart] ||= {}
@@ -148,7 +152,7 @@ post('/update_cart') do
 end
 
 
-#post('/clear_cart') do
- #   session[:cart] = {}  # Nollställ varukorgen
-  #  redirect '/show_varukorg'
-#end
+get('/clear_cart') do
+    session[:cart] = {}  # Nollställ varukorgen
+    redirect '/show_varukorg'
+end

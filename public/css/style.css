@@ -10,20 +10,25 @@ a {
 .products {
     display: flex;
     justify-content: space-evenly;
+    height: 100vh;
     margin-left: 16vw;
     margin-right: 16vw;
 }
 
 .product {
-    height: 100px;
+    height: 230px;
     width: 200px;
     padding: 10px;
     background-color: aqua;
-    
+
 }
 
 .product:hover{
     background-color: rgb(145, 145, 112);
+}
+
+.price_etc{
+    background-color: white;
 }
 
 .product_image {
@@ -35,3 +40,4 @@ a {
     height: 100%;
     width: 50%;
 }
+

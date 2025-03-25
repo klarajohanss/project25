@@ -6,3 +6,6 @@ h1 Varukorg
     - @cart.each do |item|
         p
             | Produkt: #{item[:name]}, Antal: #{item[:quantity]}, Pris: #{item[:price] * item[:quantity]} kr
+    a href="/clear_cart" Töm varukorg
+
+

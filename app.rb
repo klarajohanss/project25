@@ -7,7 +7,11 @@ enable :sessions
 set :public_folder, "public"
 
 get('/home') do
-    slim(:index)
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM produkt LIMIT 2") 
+
+    slim(:index, locals:{produkt:result})
 end
 
 get('/home/logged_in') do

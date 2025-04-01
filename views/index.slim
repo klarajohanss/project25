@@ -5,14 +5,11 @@
 
 #popular_products 
     h2 Populära produkter 
-    .products 
-        .product 
-            h3.product_name 
-            img.product_image src="" alt=""
-            .price_etc
-                p.price 
-        .product 
-            h3.product_name 
-            img.product_image src="" alt=""
-            .price_etc
-                p.price
+    .products
+        
+        - produkt.each do |produkt|
+            a.product href="/show_produkt/#{produkt["id"]}"
+                h3.product_name = produkt["namn"] 
+                img.product_image src="img/#{produkt["img_url"]}" alt=produkt["img_url"]
+                .price_etc
+                    p.price = "#{produkt["pris"]} kr"

@@ -1,0 +1,26 @@
+h1 Beställning
+
+- if @cart.empty?
+    p Din varukorg är tom. 
+    a href="/show_varukorg" Tillbaka till varukorgen
+- else
+    h2 Dina produkter:
+    ul
+        - @cart.each do |item|
+            li
+                strong #{item[:name]}
+                |  Antal: #{item[:quantity]},
+                |  Pris: #{item[:price] * item[:quantity]} kr
+    
+    h2 Fyll i dina uppgifter
+    form action="/place_order" method="post"
+        label for="name" Namn:
+        input type="text" name="name"
+        
+        label for="address" Adress:
+        input type="text" name="address"
+        
+        label for="phone" Telefonnummer:
+        input type="tel" name="phone"
+        
+        input type="submit" value="Slutför beställning"

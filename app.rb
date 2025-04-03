@@ -4,7 +4,7 @@ require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
 enable :sessions
-set :public_folder, "public"
+set :public_folder, 'public'
 
 get('/home') do
     db = SQLite3::Database.new("db/webbshop.db")
@@ -146,7 +146,8 @@ post('/update_cart') do
             session[:cart][product_id] = {
                 name: product["namn"], 
                 quantity: quantity, 
-                price: product["pris"]
+                price: product["pris"],
+                image_url: product["img_url"]
             }
         end
     end
@@ -159,4 +160,61 @@ end
 get('/clear_cart') do
     session[:cart] = {}  # Nollställ varukorgen
     redirect '/show_varukorg'
+end
+
+
+get('/checkout') do
+    redirect('/show_login') unless session[:logged_in]  
+    
+    session[:cart] ||= {}  # Se till att varukorgen alltid finns
+    @cart = session[:cart].values  # Hämta varukorgen för att visa i formuläret
+
+    slim(:checkout)  # Visa checkout-sidan
+end
+
+post('/place_order') do
+    redirect('/show_login') unless session[:logged_in]  # Säkerställ att användaren är inloggad
+
+    name = params[:name]
+    address = params[:address]
+    phone = params[:phone]
+    cart = session[:cart]  # Hämta beställningsdata från sessionen
+
+    if cart.empty?
+        redirect('/show_varukorg')  # Om varukorgen är tom, skicka tillbaka
+    end
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.execute("INSERT INTO orders (id, namn, adress, tel_nr) VALUES (?,?,?,?)",[session[:id],name,address,phone])
+
+    order_id = db.last_insert_row_id  # Hämta senaste order-ID
+
+    cart.each do |id, item|
+        db.execute("INSERT INTO order_items (order_id, produkt_id, kvantitet, pris) VALUES (?,?,?,?)",[order_id,id,item[:quantity],item[:price]])
+        #db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
+    end
+
+    puts "Inserting into beställning: #{name}, #{address}, #{phone}"
+    puts "Order ID after insert: #{order_id}"
+    puts "Cart contents: #{cart}"
+
+    session[:cart] = {}  # Töm varukorgen efter beställning
+    redirect('/order_confirmation')  # Skicka till bekräftelsesida
+end
+
+
+get('/order_confirmation') do
+    # Kontrollera om användaren är inloggad
+    redirect('/show_login') unless session[:logged_in]
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta senaste beställningen för användaren
+    order = db.execute("SELECT * FROM orders WHERE id = ?",[session[:user_id]]).last
+
+    # Hämta alla artiklar som ingår i beställningen
+    order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?",[order[:id]])
+
+    slim(:order_confirmation, locals: { order: order, order_items: order_items })
 end

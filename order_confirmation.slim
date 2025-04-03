@@ -1,0 +1,19 @@
+h1 Beställningsbekräftelse
+
+p Tack för din beställning! Här är en sammanfattning av din beställning:
+
+h2 Beställningsinformation
+p Namn: #{order['namn']}
+p Adress: #{order['adress']}
+p Telefonnummer: #{order['tel_nr']}
+
+h2 Beställda produkter
+- order_items.each do |item|
+    p
+        | Produkt: #{item['produkt_id']}  # Här kan du hämta produktnamnet från databasen om du vill
+        | - Antal: #{item['kvantitet']}
+        | - Pris: #{item['pris']} kr
+        | - Total: #{item['pris'].to_f * item['kvantitet'].to_i} kr
+
+p
+    a href="/home" class="btn btn-primary" Gå till startsidan

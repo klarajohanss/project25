@@ -4,8 +4,22 @@ h1 Varukorg
     p Din varukorg är tom.
 - else
     - @cart.each do |item|
-        p
-            | Produkt: #{item[:name]}, Antal: #{item[:quantity]}, Pris: #{item[:price] * item[:quantity]} kr
+        div
+            img src="img/#{item[:image_url]}" alt="Produktbild" width="150" height="150"
+            p
+                | Produkt: #{item[:name]}
+            p
+                | Antal: #{item[:quantity]}
+            p
+                | Pris: #{item[:price] * item[:quantity]} kr
+        
     a href="/clear_cart" Töm varukorg
+
+    - if session[:logged_in]
+        p
+        a.btn href="/checkout" Vidare till beställning
+    - else
+        p Du måste vara inloggad för att fortsätta.
+        a.btn href="/show_login" Logga in här
 
 

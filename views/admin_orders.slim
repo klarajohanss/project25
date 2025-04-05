@@ -1,0 +1,15 @@
+h2 Alla beställningar
+
+- if orders.empty?
+    p Det finns inga beställningar.
+- else
+    ul
+        - orders.each do |order|
+            li
+                | Beställnings-ID: #{order["id"]},  
+                | Namn: #{order["namn"]}, 
+                | Adress: #{order["adress"]}, 
+                | Telefonnummer: #{order["tel_nr"]}, 
+                | Datum: #{order["created_at"]}
+                p
+                    a href="/order_details/#{order['id']}" Visa produkter

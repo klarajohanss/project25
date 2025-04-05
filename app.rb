@@ -31,27 +31,36 @@ get('/register') do
     slim(:register)
 end
 
+
+
 post('/login') do
     username = params[:username]
     password = params[:password]
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM users WHERE username = ?",username).first
+    result = db.execute("SELECT * FROM users WHERE username = ?", username).first
+
+    if result.nil?
+        return "Fel användarnamn"
+    end
+
     pwdigest = result["pwdigest"]
     id = result["id"]
     username = result["username"]
-  
-    if (BCrypt::Password.new(pwdigest)) != password
+    is_admin = result["is_admin"] == 1
+
+    if BCrypt::Password.new(pwdigest) != password
         "Fel lösenord"
-    #elsif username... (validera om username finns)
     else
         session[:id] = id
         session[:username] = username
         session[:logged_in] = true
+        session[:is_admin] = is_admin  # ← Lägg till den här raden
+
         redirect('/home/logged_in')
-      
     end
 end
+
 
 post('/logout') do
     session.clear
@@ -223,4 +232,35 @@ get('/order_confirmation') do
 
     slim(:order_confirmation, locals: { order: order, order_items: order_items })
 
+end
+
+
+get('/admin_orders') do
+    # Kontrollera om användaren är inloggad och är admin
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta alla beställningar från databasen
+    orders = db.execute("SELECT * FROM orders")
+
+    slim(:admin_orders, locals: { orders: orders })
+end
+
+get('/order_details/:id') do
+    # Kontrollera om användaren är inloggad och är admin
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]
+
+    order_id = params[:id]
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta beställningen från databasen
+    order = db.execute("SELECT * FROM orders WHERE id = ?", order_id).first
+
+    # Hämta alla order_items för den beställningen
+    order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?", order_id)
+
+    slim(:order_details, locals: { order: order, order_items: order_items })
 end

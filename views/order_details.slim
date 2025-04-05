@@ -1,0 +1,18 @@
+h2 Beställningsdetaljer
+
+p Beställnings-ID: #{order["id"]}
+p Namn: #{order["namn"]}
+p Adress: #{order["adress"]}
+p Telefonnummer: #{order["tel_nr"]}
+p Datum: #{order["created_at"]}
+
+h3 Beställda produkter
+- order_items.each do |item|
+    p
+        | Produkt-ID: #{item['produkt_id']}, 
+        | Antal: #{item['kvantitet']}, 
+        | Pris: #{item['pris']} kr, 
+        | Totalt pris: #{item['pris'].to_i * item['kvantitet'].to_i} kr
+
+p
+    a href="/admin_orders" Tillbaka till alla beställningar

@@ -1,5 +1,10 @@
 h2 Mina sidor
 p Användarnamn: #{session[:username]}
 
+- if session[:is_admin]
+    h3 Adminpanel
+    p Du är inloggad som admin.
+    a href="/admin_orders" Visa alla beställningar
+
 form action="/logout" method="post"
     button type="submit" Logga ut

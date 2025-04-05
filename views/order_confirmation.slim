@@ -10,10 +10,13 @@ p Telefonnummer: #{order['tel_nr']}
 h2 Beställda produkter
 - order_items.each do |item|
     p
-        | Produkt: #{item['produkt_id']}  # Här kan du hämta produktnamnet från databasen om du vill
+        | Produkt: #{item['produkt_namn']}
+    p
         | - Antal: #{item['kvantitet']}
+    p
         | - Pris: #{item['pris']} kr
-        | - Total: #{item['pris'].to_f * item['kvantitet'].to_i} kr
+    p
+        | - Total: #{item['pris'].to_i * item['kvantitet'].to_i} kr
 
 p
     a href="/home" class="btn btn-primary" Gå till startsidan

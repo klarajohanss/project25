@@ -185,18 +185,19 @@ post('/place_order') do
     end
 
     db = SQLite3::Database.new("db/webbshop.db")
-    db.execute("INSERT INTO orders (id, namn, adress, tel_nr) VALUES (?,?,?,?)",[session[:id],name,address,phone])
-
+    db.execute("INSERT INTO orders (user_id, namn, adress, tel_nr) VALUES (?,?,?,?)", [session[:id], name, address, phone])
+    
     order_id = db.last_insert_row_id  # Hämta senaste order-ID
+    session[:last_order_id] = order_id
 
     cart.each do |id, item|
         db.execute("INSERT INTO order_items (order_id, produkt_id, kvantitet, pris) VALUES (?,?,?,?)",[order_id,id,item[:quantity],item[:price]])
         #db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
     end
 
-    puts "Inserting into beställning: #{name}, #{address}, #{phone}"
-    puts "Order ID after insert: #{order_id}"
-    puts "Cart contents: #{cart}"
+    #puts "Inserting into beställning: #{name}, #{address}, #{phone}"
+    #puts "Order ID after insert: #{order_id}"
+    #puts "Cart contents: #{cart}"
 
     session[:cart] = {}  # Töm varukorgen efter beställning
     redirect('/order_confirmation')  # Skicka till bekräftelsesida
@@ -210,11 +211,16 @@ get('/order_confirmation') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
 
-    # Hämta senaste beställningen för användaren
-    order = db.execute("SELECT * FROM orders WHERE id = ?",[session[:user_id]]).last
+    order_id = session[:last_order_id]
+    order = db.execute("SELECT * FROM orders WHERE id = ?", [order_id]).first
+    order_items = db.execute(
+        "SELECT order_items.*, produkt.namn AS produkt_namn
+        FROM order_items
+        JOIN produkt ON order_items.produkt_id = produkt.id
+        WHERE order_items.order_id = ?", [order_id]
+    )
 
-    # Hämta alla artiklar som ingår i beställningen
-    order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?",[order[:id]])
 
     slim(:order_confirmation, locals: { order: order, order_items: order_items })
+
 end

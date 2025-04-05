@@ -1,0 +1,15 @@
+h2 Har du funderingar kring något? Skicka en fråga med formuläret nedan!
+
+- if !session[:logged_in]
+    p Du måste vara inloggad för att skicka en fråga.
+    a href="/show_login" Logga in här
+- else
+    form action="/send_question" method="post"
+        input type="text" name="name" placeholder="Ange ditt namn" 
+        br
+        textarea name="question" placeholder="Skriv din fråga här" rows="5" 
+        br
+        input type="submit" value="Skicka fråga"
+
+h3 Se svar på tidigare frågor 
+a href="/show_questions" Frågor och Svar

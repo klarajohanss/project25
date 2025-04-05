@@ -129,8 +129,98 @@ get('/show_om_oss') do
 end
 
 get('/show_kontakt') do
+    redirect('/show_login') unless session[:logged_in]  # Se till att användaren är inloggad
     slim(:kontakt)
 end
+
+post('/send_question') do
+    redirect('/show_login') unless session[:logged_in]  # Se till att användaren är inloggad
+    
+    name = params[:name]
+    question = params[:question]
+    user_id = session[:id]  # Hämta användarens id från sessionen
+    created_at = Time.now.strftime('%Y-%m-%d %H:%M:%S')  # Skapa en tidsstämpel i korrekt format
+
+    if name.empty? || question.empty?
+        return "Namnet eller frågan får inte vara tomma!"
+    end
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.execute("INSERT INTO questions (user_id, name, question, created_at) VALUES (?, ?, ?, ?)", 
+        [session[:id], name, question, created_at])
+    redirect('/show_kontakt')  # Bekräftelse att frågan är skickad eller visa en tack-sida
+end
+
+get('/admin_questions') do
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Se till att användaren är inloggad och admin
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta alla frågor som användare har skickat
+    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
+
+    slim(:admin_questions, locals: { questions: questions })
+end
+
+get('/answer_question/:question_id') do
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
+
+    question_id = params[:question_id]
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta frågan från databasen
+    question = db.execute("SELECT * FROM questions WHERE id = ?", [question_id]).first
+
+    slim(:answer_question, locals: { question: question })
+end
+
+get('/answer_question/:question_id') do
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
+
+    question_id = params[:question_id]
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta frågan från databasen
+    question = db.execute("SELECT * FROM questions WHERE id = ?", [question_id]).first
+
+    slim(:answer_question, locals: { question: question })
+end
+
+post('/answer_question/:question_id') do
+    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
+
+    question_id = params[:question_id]
+    answer = params[:answer]
+
+    # Om svaret är tomt, ge ett felmeddelande
+    if answer.empty?
+        return "Svaret får inte vara tomt!"
+    end
+
+    db = SQLite3::Database.new("db/webbshop.db")
+    
+    # Uppdatera frågan med svaret
+    db.execute("UPDATE questions SET answer = ? WHERE id = ?", [answer, question_id])
+
+    redirect('/admin_answers')  # Tillbaka till admin-sidan där alla frågor visas
+end
+
+
+get('/show_questions') do
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta alla frågor och svar (om de finns)
+    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
+
+    slim(:show_questions, locals: { questions: questions })
+end
+
+
+
 
 post('/update_cart') do
     if params[:quantity].empty?

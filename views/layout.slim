@@ -9,17 +9,17 @@ html lang="en"
         header
             img src="" alt="Multibox Logo"
             div.header_info
-                a href="/show_varukorg" Varukorg
+                a href="/cart" Varukorg
             div.login_user
             - if session[:logged_in]
-                a href="/home/logged_in" = session[:username]
+                a href="/users/#{session[:id]}" = session[:username]
             - else
-                a href="/show_login" Logga in
+                a href="/login" Logga in
         nav
-            a href="/home" Hem
-            a href="/show_produkter" Produkter
-            a href="/show_om_oss" Om oss
-            a href="/show_kontakt" Kontakt
+            a href="/" Hem
+            a href="/products" Produkter
+            a href="/about" Om oss
+            a href="/contact" Kontakt
         section.main 
             == yield
         footer 

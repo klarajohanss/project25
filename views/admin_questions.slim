@@ -18,7 +18,7 @@ h2 Alla användarfrågor
                         | Svar: Ej besvarad
                 
                 - if session[:logged_in] && session[:is_admin]
-                    form action="/answer_question/#{question['id']}" method="post"
+                    form action="/admin/questions/#{question['id']}/answer" method="post"
                         label for="answer" Skriv ditt svar:
                         textarea name="answer" rows="4" cols="50" placeholder="Skriv ditt svar här..."
                         input type="submit" value="Skicka svar"

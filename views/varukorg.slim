@@ -13,13 +13,13 @@ h1 Varukorg
             p
                 | Pris: #{item[:price] * item[:quantity]} kr
         
-    a href="/clear_cart" Töm varukorg
+    a href="/cart/clear" Töm varukorg
 
     - if session[:logged_in]
         p
         a.btn href="/checkout" Vidare till beställning
     - else
         p Du måste vara inloggad för att fortsätta.
-        a.btn href="/show_login" Logga in här
+        a.btn href="/login" Logga in här
 
 

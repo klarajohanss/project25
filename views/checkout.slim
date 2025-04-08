@@ -2,7 +2,7 @@ h1 Beställning
 
 - if @cart.empty?
     p Din varukorg är tom. 
-    a href="/show_varukorg" Tillbaka till varukorgen
+    a href="/cart" Tillbaka till varukorgen
 - else
     h2 Dina produkter:
     ul
@@ -13,7 +13,7 @@ h1 Beställning
                 |  Pris: #{item[:price] * item[:quantity]} kr
     
     h2 Fyll i dina uppgifter
-    form action="/place_order" method="post"
+    form action="/orders" method="post"
         label for="name" Namn:
         input type="text" name="name"
         

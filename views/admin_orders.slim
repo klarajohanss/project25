@@ -12,6 +12,6 @@ h2 Alla beställningar
                 | Telefonnummer: #{order["tel_nr"]}, 
                 | Datum: #{order["created_at"]}
                 p
-                    a href="/order_details/#{order['id']}" Visa produkter
+                    a href="/admin/orders/#{order['id']}" Visa produkter
                 p
-                    a href="/home/logged_in" Tillbaka till mina sidor
+                    a href="/users/#{session[:id]}" Tillbaka till mina sidor

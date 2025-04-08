@@ -6,7 +6,9 @@ require 'bcrypt'
 enable :sessions
 set :public_folder, 'public'
 
-get('/home') do
+
+#HEM
+get('/') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM produkt LIMIT 2") 
@@ -14,7 +16,7 @@ get('/home') do
     slim(:index, locals:{produkt:result})
 end
 
-get('/home/logged_in') do
+get('/user/:id') do
     id = session[:id].to_i
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -23,14 +25,14 @@ get('/home/logged_in') do
     slim(:mina_sidor, locals:{users:result})
 end
 
-get('/show_login') do
+#LOGIN / REGISTRERING
+get('/login') do
     slim(:login)
 end
 
-get('/register') do
+get('/users/new') do
     slim(:register)
 end
-
 
 
 post('/login') do
@@ -57,17 +59,17 @@ post('/login') do
         session[:logged_in] = true
         session[:is_admin] = is_admin  # ← Lägg till den här raden
 
-        redirect('/home/logged_in')
+        redirect('/users/#{id}')
     end
 end
 
 
 post('/logout') do
     session.clear
-    redirect('/home')
+    redirect('/')
 end
 
-post('/users/new') do
+post('/users') do
     username = params[:username]
     password = params[:password]
     password_confirm = params[:password_confirm]
@@ -85,7 +87,7 @@ post('/users/new') do
         password_digest = BCrypt::Password.create(password)
       db = SQLite3::Database.new("db/webbshop.db")
       db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
-      redirect('/home')
+      redirect('/')
     end
 end
 
@@ -96,17 +98,9 @@ end
 
 
 
-get('/show_varukorg') do
-    session[:cart] ||= {}  # Se till att session[:cart] alltid finns
-    @cart = session[:cart].values  # Hämta alla produkter från sessionen direkt
+#PRODUKTER
 
-    slim(:varukorg)  # Skicka till Slim för rendering
-end
-
-
-
-
-get('/show_produkter') do
+get('/products') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM produkt")
@@ -115,7 +109,7 @@ get('/show_produkter') do
 end
 
 #skicka med vilken row (produkt) från show_products, ändra sql
-get('/show_produkt/:id') do
+get('/products/:id') do
     id = params[:id].to_i
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -124,17 +118,31 @@ get('/show_produkt/:id') do
     slim(:produkt, locals:{produkt:result})
 end
 
-get('/show_om_oss') do
+#STATISKA SIDOR
+
+get('/about') do
     slim(:om_oss)
 end
 
-get('/show_kontakt') do
-    redirect('/show_login') unless session[:logged_in]  # Se till att användaren är inloggad
+get('/contact') do
+    redirect('/login') unless session[:logged_in]  # Se till att användaren är inloggad
     slim(:kontakt)
 end
 
-post('/send_question') do
-    redirect('/show_login') unless session[:logged_in]  # Se till att användaren är inloggad
+#KONTAKTFRÅGOR
+
+get('/questions') do
+    db = SQLite3::Database.new("db/webbshop.db")
+    db.results_as_hash = true
+
+    # Hämta alla frågor och svar (om de finns)
+    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
+
+    slim(:show_questions, locals: { questions: questions })
+end
+
+post('/questions') do
+    redirect('/login') unless session[:logged_in]  # Se till att användaren är inloggad
     
     name = params[:name]
     question = params[:question]
@@ -148,11 +156,13 @@ post('/send_question') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.execute("INSERT INTO questions (user_id, name, question, created_at) VALUES (?, ?, ?, ?)", 
         [session[:id], name, question, created_at])
-    redirect('/show_kontakt')  # Bekräftelse att frågan är skickad eller visa en tack-sida
+    redirect('/contact')  # Bekräftelse att frågan är skickad eller visa en tack-sida
 end
 
-get('/admin_questions') do
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Se till att användaren är inloggad och admin
+#ADMIN KONTAKTER
+
+get('/admin/questions') do
+    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Se till att användaren är inloggad och admin
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -163,8 +173,8 @@ get('/admin_questions') do
     slim(:admin_questions, locals: { questions: questions })
 end
 
-get('/answer_question/:question_id') do
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
+get('/admin/questions/:id/answer') do
+    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
     question_id = params[:question_id]
     db = SQLite3::Database.new("db/webbshop.db")
@@ -176,21 +186,10 @@ get('/answer_question/:question_id') do
     slim(:answer_question, locals: { question: question })
 end
 
-get('/answer_question/:question_id') do
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
-    question_id = params[:question_id]
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
 
-    # Hämta frågan från databasen
-    question = db.execute("SELECT * FROM questions WHERE id = ?", [question_id]).first
-
-    slim(:answer_question, locals: { question: question })
-end
-
-post('/answer_question/:question_id') do
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
+post('/admin/questions/:id/answer') do
+    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
     question_id = params[:question_id]
     answer = params[:answer]
@@ -205,24 +204,23 @@ post('/answer_question/:question_id') do
     # Uppdatera frågan med svaret
     db.execute("UPDATE questions SET answer = ? WHERE id = ?", [answer, question_id])
 
-    redirect('/admin_answers')  # Tillbaka till admin-sidan där alla frågor visas
-end
-
-
-get('/show_questions') do
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta alla frågor och svar (om de finns)
-    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
-
-    slim(:show_questions, locals: { questions: questions })
+    redirect('/admin/answers')  # Tillbaka till admin-sidan där alla frågor visas
 end
 
 
 
 
-post('/update_cart') do
+
+#VARUKORG
+
+get('/cart') do
+    session[:cart] ||= {}  # Se till att session[:cart] alltid finns
+    @cart = session[:cart].values  # Hämta alla produkter från sessionen direkt
+
+    slim(:varukorg)  # byta namn till cart !!!!
+end
+
+post('/cart') do
     if params[:quantity].empty?
         quantity = 1
     else
@@ -252,18 +250,19 @@ post('/update_cart') do
     end
 
     # Redirect tillbaka till produktens sida
-    redirect "/show_produkt/#{product_id}"
+    redirect('/products/#{product_id}')
 end
 
 
-get('/clear_cart') do
+get('/cart/clear') do
     session[:cart] = {}  # Nollställ varukorgen
-    redirect '/show_varukorg'
+    redirect('/cart')
 end
 
+#CHECKOUT / ORDER
 
 get('/checkout') do
-    redirect('/show_login') unless session[:logged_in]  
+    redirect('/login') unless session[:logged_in]  
     
     session[:cart] ||= {}  # Se till att varukorgen alltid finns
     @cart = session[:cart].values  # Hämta varukorgen för att visa i formuläret
@@ -271,8 +270,8 @@ get('/checkout') do
     slim(:checkout)  # Visa checkout-sidan
 end
 
-post('/place_order') do
-    redirect('/show_login') unless session[:logged_in]  # Säkerställ att användaren är inloggad
+post('/orders') do
+    redirect('/login') unless session[:logged_in]  # Säkerställ att användaren är inloggad
 
     name = params[:name]
     address = params[:address]
@@ -280,7 +279,7 @@ post('/place_order') do
     cart = session[:cart]  # Hämta beställningsdata från sessionen
 
     if cart.empty?
-        redirect('/show_varukorg')  # Om varukorgen är tom, skicka tillbaka
+        redirect('/cart')  # Om varukorgen är tom, skicka tillbaka
     end
 
     db = SQLite3::Database.new("db/webbshop.db")
@@ -299,13 +298,13 @@ post('/place_order') do
     #puts "Cart contents: #{cart}"
 
     session[:cart] = {}  # Töm varukorgen efter beställning
-    redirect('/order_confirmation')  # Skicka till bekräftelsesida
+    redirect('/orders/confirmation')  # Skicka till bekräftelsesida
 end
 
 
-get('/order_confirmation') do
+get('/orders/confirmation') do
     # Kontrollera om användaren är inloggad
-    redirect('/show_login') unless session[:logged_in]
+    redirect('/login') unless session[:logged_in]
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -324,10 +323,11 @@ get('/order_confirmation') do
 
 end
 
+#ADMIN ORDERS
 
-get('/admin_orders') do
+get('/admin/orders') do
     # Kontrollera om användaren är inloggad och är admin
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]
+    redirect('/login') unless session[:logged_in] && session[:is_admin]
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -338,9 +338,9 @@ get('/admin_orders') do
     slim(:admin_orders, locals: { orders: orders })
 end
 
-get('/order_details/:id') do
+get('/admin/orders/:id') do
     # Kontrollera om användaren är inloggad och är admin
-    redirect('/show_login') unless session[:logged_in] && session[:is_admin]
+    redirect('/login') unless session[:logged_in] && session[:is_admin]
 
     order_id = params[:id]
     db = SQLite3::Database.new("db/webbshop.db")

@@ -1,14 +1,14 @@
 #index_main
     img src="" alt=""
     h1 Välkommen till Multibox! 
-    a.btn href="/show_om_oss" Läs mer
+    a.btn href="/about" Läs mer
 
 #popular_products 
     h2 Populära produkter 
     .products
         
         - produkt.each do |produkt|
-            a.product href="/show_produkt/#{produkt["id"]}"
+            a.product href="/products/#{produkt["id"]}"
                 h3.product_name = produkt["namn"] 
                 img.product_image src="img/#{produkt["img_url"]}" alt=produkt["img_url"]
                 .price_etc

@@ -13,7 +13,7 @@ get('/') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM produkt LIMIT 2") 
 
-    slim(:index, locals:{produkt:result})
+    slim(:"home/index", locals:{produkt:result})
 end
 
 get('/user/:id') do
@@ -22,7 +22,7 @@ get('/user/:id') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE id = ?",id)
     p "användarnamn: #{result}"
-    slim(:mina_sidor, locals:{users:result})
+    slim(:"profile/user_profile", locals:{users:result})
 end
 
 #LOGIN / REGISTRERING
@@ -91,10 +91,6 @@ post('/users') do
     end
 end
 
-#get('/show_varukorg') do
-#    @cart = session[:cart] || {}
-#    slim(:varukorg)
-#end
 
 
 
@@ -105,7 +101,7 @@ get('/products') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM produkt")
 
-    slim(:produkter, locals:{produkt:result})
+    slim(:"product/list", locals:{produkt:result})
 end
 
 #skicka med vilken row (produkt) från show_products, ändra sql
@@ -115,18 +111,18 @@ get('/products/:id') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM produkt WHERE id = ?",id).first
 
-    slim(:produkt, locals:{produkt:result})
+    slim(:"product/product_page", locals:{produkt:result})
 end
 
 #STATISKA SIDOR
 
 get('/about') do
-    slim(:om_oss)
+    slim(:"about/about_us")
 end
 
 get('/contact') do
     redirect('/login') unless session[:logged_in]  # Se till att användaren är inloggad
-    slim(:kontakt)
+    slim(:contact)
 end
 
 #KONTAKTFRÅGOR
@@ -138,7 +134,7 @@ get('/questions') do
     # Hämta alla frågor och svar (om de finns)
     questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
 
-    slim(:show_questions, locals: { questions: questions })
+    slim(:"contact/show_questions", locals: { questions: questions })
 end
 
 post('/questions') do
@@ -170,7 +166,7 @@ get('/admin/questions') do
     # Hämta alla frågor som användare har skickat
     questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
 
-    slim(:admin_questions, locals: { questions: questions })
+    slim(:"admin/questions", locals: { questions: questions })
 end
 
 get('/admin/questions/:id/answer') do
@@ -217,7 +213,7 @@ get('/cart') do
     session[:cart] ||= {}  # Se till att session[:cart] alltid finns
     @cart = session[:cart].values  # Hämta alla produkter från sessionen direkt
 
-    slim(:varukorg)  # byta namn till cart !!!!
+    slim(:cart)  # byta namn till cart !!!!
 end
 
 post('/cart') do
@@ -319,7 +315,7 @@ get('/orders/confirmation') do
     )
 
 
-    slim(:order_confirmation, locals: { order: order, order_items: order_items })
+    slim(:"order/confirmation", locals: { order: order, order_items: order_items })
 
 end
 
@@ -335,7 +331,7 @@ get('/admin/orders') do
     # Hämta alla beställningar från databasen
     orders = db.execute("SELECT * FROM orders")
 
-    slim(:admin_orders, locals: { orders: orders })
+    slim(:"admin/orders", locals: { orders: orders })
 end
 
 get('/admin/orders/:id') do
@@ -352,5 +348,5 @@ get('/admin/orders/:id') do
     # Hämta alla order_items för den beställningen
     order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?", order_id)
 
-    slim(:order_details, locals: { order: order, order_items: order_items })
+    slim(:"order/details", locals: { order: order, order_items: order_items })
 end

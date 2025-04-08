@@ -12,7 +12,7 @@ html lang="en"
                 a href="/cart" Varukorg
             div.login_user
             - if session[:logged_in]
-                a href="/users/#{session[:id]}" = session[:username]
+                a href="/user/#{session[:id]}" = session[:username]
             - else
                 a href="/login" Logga in
         nav

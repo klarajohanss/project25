@@ -59,7 +59,7 @@ post('/login') do
         session[:logged_in] = true
         session[:is_admin] = is_admin  # ← Lägg till den här raden
 
-        redirect('/users/#{id}')
+        redirect("/user/#{id}")
     end
 end
 
@@ -176,7 +176,7 @@ end
 get('/admin/questions/:id/answer') do
     redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
-    question_id = params[:question_id]
+    question_id = params[:id] #ändrat från chatgpt !!!
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
 
@@ -191,7 +191,7 @@ end
 post('/admin/questions/:id/answer') do
     redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
-    question_id = params[:question_id]
+    question_id = params[:id]#ändrat från chatgpt !!!
     answer = params[:answer]
 
     # Om svaret är tomt, ge ett felmeddelande
@@ -204,7 +204,7 @@ post('/admin/questions/:id/answer') do
     # Uppdatera frågan med svaret
     db.execute("UPDATE questions SET answer = ? WHERE id = ?", [answer, question_id])
 
-    redirect('/admin/answers')  # Tillbaka till admin-sidan där alla frågor visas
+    redirect('/admin/questions')  # Tillbaka till admin-sidan där alla frågor visas
 end
 
 
@@ -250,7 +250,7 @@ post('/cart') do
     end
 
     # Redirect tillbaka till produktens sida
-    redirect('/products/#{product_id}')
+    redirect("/products/#{product_id}")
 end
 
 

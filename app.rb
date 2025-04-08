@@ -3,6 +3,7 @@ require 'slim'
 require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
+require_relative './model.rb'
 enable :sessions
 set :public_folder, 'public'
 

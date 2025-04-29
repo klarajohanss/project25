@@ -134,7 +134,7 @@ get('/questions') do
     # Hämta alla frågor och svar (om de finns)
     questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
 
-    slim(:"contact/show_questions", locals: { questions: questions })
+    slim(:"questions/index.slim", locals: { questions: questions })
 end
 
 post('/questions') do

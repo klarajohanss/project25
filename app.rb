@@ -6,12 +6,21 @@ require 'bcrypt'
 enable :sessions
 set :public_folder, 'public'
 
+before %r{/(profile|contact|questions|orders|checkout)} do
+    redirect('/login') unless session[:logged_in]
+end
 
+before '/admin/*' do
+    unless session[:logged_in] && session[:is_admin]
+      redirect('/login')
+    end
+end
+  
 #HEM
 get('/') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM produkt LIMIT 2") 
+    result = db.execute("SELECT * FROM products LIMIT 2") 
 
     slim(:"home/index", locals:{produkt:result})
 end
@@ -99,7 +108,7 @@ end
 get('/products') do
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM produkt")
+    result = db.execute("SELECT * FROM products")
 
     slim(:"product/list", locals:{produkt:result})
 end
@@ -109,7 +118,7 @@ get('/products/:id') do
     id = params[:id].to_i
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM produkt WHERE id = ?",id).first
+    result = db.execute("SELECT * FROM products WHERE id = ?",id).first
 
     slim(:"product/product_page", locals:{produkt:result})
 end
@@ -121,7 +130,6 @@ get('/about') do
 end
 
 get('/contact') do
-    redirect('/login') unless session[:logged_in]  # Se till att användaren är inloggad
     slim(:contact)
 end
 
@@ -138,8 +146,6 @@ get('/questions') do
 end
 
 post('/questions') do
-    redirect('/login') unless session[:logged_in]  # Se till att användaren är inloggad
-    
     name = params[:name]
     question = params[:question]
     user_id = session[:id]  # Hämta användarens id från sessionen
@@ -158,7 +164,6 @@ end
 #ADMIN KONTAKTER
 
 get('/admin/questions') do
-    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Se till att användaren är inloggad och admin
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -170,7 +175,6 @@ get('/admin/questions') do
 end
 
 get('/admin/questions/:id/answer') do
-    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
     question_id = params[:id] #ändrat från chatgpt !!!
     db = SQLite3::Database.new("db/webbshop.db")
@@ -185,7 +189,6 @@ end
 
 
 post('/admin/questions/:id/answer') do
-    redirect('/login') unless session[:logged_in] && session[:is_admin]  # Säkerställ att användaren är admin
 
     question_id = params[:id]#ändrat från chatgpt !!!
     answer = params[:answer]
@@ -229,7 +232,7 @@ post('/cart') do
     # Hämta produktens namn och pris från databasen och spara i sessionen
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    product = db.execute("SELECT * FROM produkt WHERE id = ?",product_id).first
+    product = db.execute("SELECT * FROM products WHERE id = ?",product_id).first
 
     if product
         # Uppdatera kvantiteten om produkten finns i varukorgen, annars lägg till den
@@ -258,7 +261,6 @@ end
 #CHECKOUT / ORDER
 
 get('/checkout') do
-    redirect('/login') unless session[:logged_in]  
     
     session[:cart] ||= {}  # Se till att varukorgen alltid finns
     @cart = session[:cart].values  # Hämta varukorgen för att visa i formuläret
@@ -267,7 +269,6 @@ get('/checkout') do
 end
 
 post('/orders') do
-    redirect('/login') unless session[:logged_in]  # Säkerställ att användaren är inloggad
 
     name = params[:name]
     address = params[:address]
@@ -300,7 +301,6 @@ end
 
 get('/orders/confirmation') do
     # Kontrollera om användaren är inloggad
-    redirect('/login') unless session[:logged_in]
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -308,9 +308,9 @@ get('/orders/confirmation') do
     order_id = session[:last_order_id]
     order = db.execute("SELECT * FROM orders WHERE id = ?", [order_id]).first
     order_items = db.execute(
-        "SELECT order_items.*, produkt.namn AS produkt_namn
+        "SELECT order_items.*, products.namn AS produkt_namn
         FROM order_items
-        JOIN produkt ON order_items.produkt_id = produkt.id
+        JOIN products ON order_items.produkt_id = products.id
         WHERE order_items.order_id = ?", [order_id]
     )
 
@@ -323,7 +323,6 @@ end
 
 get('/admin/orders') do
     # Kontrollera om användaren är inloggad och är admin
-    redirect('/login') unless session[:logged_in] && session[:is_admin]
 
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
@@ -336,7 +335,6 @@ end
 
 get('/admin/orders/:id') do
     # Kontrollera om användaren är inloggad och är admin
-    redirect('/login') unless session[:logged_in] && session[:is_admin]
 
     order_id = params[:id]
     db = SQLite3::Database.new("db/webbshop.db")

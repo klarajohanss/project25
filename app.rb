@@ -6,6 +6,7 @@ require 'bcrypt'
 enable :sessions
 set :public_folder, 'public'
 
+
 before %r{/(profile|contact|questions|orders|checkout)} do
     redirect('/login') unless session[:logged_in]
 end
@@ -31,20 +32,27 @@ get('/user/:id') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE id = ?",id)
     p "användarnamn: #{result}"
-    slim(:"profile/user_profile", locals:{users:result})
+    slim(:"users/show", locals:{users:result})
 end
 
 #LOGIN / REGISTRERING
 get('/login') do
-    slim(:login)
+    slim(:"users/login")
 end
 
 get('/users/new') do
-    slim(:register)
+    slim(:"users/register")
 end
 
-
 post('/login') do
+    cooldown_seconds = 5  
+
+    if session[:last_login_attempt] && Time.now - session[:last_login_attempt] < cooldown_seconds
+        return "För många försök. Vänta några sekunder innan du försöker igen."
+    end
+
+    session[:last_login_attempt] = Time.now
+
     username = params[:username]
     password = params[:password]
     db = SQLite3::Database.new("db/webbshop.db")
@@ -61,16 +69,18 @@ post('/login') do
     is_admin = result["is_admin"] == 1
 
     if BCrypt::Password.new(pwdigest) != password
-        "Fel lösenord"
+        return "Fel lösenord"
     else
         session[:id] = id
         session[:username] = username
         session[:logged_in] = true
-        session[:is_admin] = is_admin  # ← Lägg till den här raden
+        session[:is_admin] = is_admin
 
+        session.delete(:last_login_attempt)  # Rensa så spärren inte ligger kvar
         redirect("/user/#{id}")
     end
 end
+
 
 
 post('/logout') do
@@ -110,7 +120,7 @@ get('/products') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM products")
 
-    slim(:"product/list", locals:{produkt:result})
+    slim(:"products/index", locals:{produkt:result})
 end
 
 #skicka med vilken row (produkt) från show_products, ändra sql
@@ -120,7 +130,7 @@ get('/products/:id') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM products WHERE id = ?",id).first
 
-    slim(:"product/product_page", locals:{produkt:result})
+    slim(:"products/show", locals:{produkt:result})
 end
 
 #STATISKA SIDOR
@@ -171,7 +181,7 @@ get('/admin/questions') do
     # Hämta alla frågor som användare har skickat
     questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
 
-    slim(:"admin/questions", locals: { questions: questions })
+    slim(:"questions/admin_index", locals: { questions: questions })
 end
 
 get('/admin/questions/:id/answer') do
@@ -183,7 +193,7 @@ get('/admin/questions/:id/answer') do
     # Hämta frågan från databasen
     question = db.execute("SELECT * FROM questions WHERE id = ?", [question_id]).first
 
-    slim(:answer_question, locals: { question: question })
+    slim(:"questions/answer", locals: { question: question })
 end
 
 
@@ -265,7 +275,7 @@ get('/checkout') do
     session[:cart] ||= {}  # Se till att varukorgen alltid finns
     @cart = session[:cart].values  # Hämta varukorgen för att visa i formuläret
 
-    slim(:checkout)  # Visa checkout-sidan
+    slim(:checkout)
 end
 
 post('/orders') do
@@ -315,7 +325,7 @@ get('/orders/confirmation') do
     )
 
 
-    slim(:"order/confirmation", locals: { order: order, order_items: order_items })
+    slim(:"orders/confirmation", locals: { order: order, order_items: order_items })
 
 end
 
@@ -330,7 +340,7 @@ get('/admin/orders') do
     # Hämta alla beställningar från databasen
     orders = db.execute("SELECT * FROM orders")
 
-    slim(:"admin/orders", locals: { orders: orders })
+    slim(:"orders/admin_index", locals: { orders: orders })
 end
 
 get('/admin/orders/:id') do
@@ -346,5 +356,5 @@ get('/admin/orders/:id') do
     # Hämta alla order_items för den beställningen
     order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?", order_id)
 
-    slim(:"order/details", locals: { order: order, order_items: order_items })
+    slim(:"orders/show", locals: { order: order, order_items: order_items })
 end

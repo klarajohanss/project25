@@ -6,361 +6,237 @@ require 'bcrypt'
 require_relative './model.rb'
 enable :sessions
 set :public_folder, 'public'
-
+include Model
 
 before %r{/(profile|contact|questions|orders|checkout)} do
-    redirect('/login') unless session[:logged_in]
+  redirect('/login') unless session[:logged_in]
 end
 
 before '/admin/*' do
-    unless session[:logged_in] && session[:is_admin]
-      redirect('/login')
-    end
+  unless session[:logged_in] && session[:is_admin]
+    redirect('/login')
+  end
 end
-  
-#HEM
+
+# HEM
 get('/') do
-    result = fetch_two_products
-    slim(:"home/index", locals:{produkt:result})
+  result = fetch_two_products  # Flyttad till model.rb
+  slim(:"home/index", locals:{produkt:result})
 end
 
 get('/user/:id') do
-    requested_id = params[:id].to_i
-  
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-  
-    owner = db.execute("SELECT id FROM users WHERE id = ?", requested_id).first
-  
-    if owner && owner["id"] == session[:id]
-      result = db.execute("SELECT * FROM users WHERE id = ?", requested_id)
-      slim(:"users/show", locals:{users: result})
-    else
-        return "Aja baja inte hacka!"
-    end
-end
-  
+  requested_id = params[:id].to_i
+  owner_id = check_user_ownership(requested_id)  # Flyttad till model.rb
 
-#LOGIN / REGISTRERING
+  if owner_id == session[:id]
+    result = find_user_by_id(requested_id)  # Flyttad till model.rb
+    slim(:"users/show", locals:{users: result})
+  else
+    return "Aja baja inte hacka!"
+  end
+end
+
+# LOGIN / REGISTRERING
 get('/login') do
-    slim(:"users/login")
+  slim(:"users/login")
 end
 
 get('/users/new') do
-    slim(:"users/register")
+  slim(:"users/register")
 end
 
 post('/login') do
-    cooldown_seconds = 5  
+  cooldown_seconds = 5
 
-    if session[:last_login_attempt] && Time.now - session[:last_login_attempt] < cooldown_seconds
-        return "För många försök. Vänta några sekunder innan du försöker igen."
-    end
+  if session[:last_login_attempt] && Time.now - session[:last_login_attempt] < cooldown_seconds
+    return "För många försök. Vänta några sekunder innan du försöker igen."
+  end
 
-    session[:last_login_attempt] = Time.now
+  session[:last_login_attempt] = Time.now
 
-    username = params[:username]
-    password = params[:password]
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM users WHERE username = ?", username).first
+  username = params[:username]
+  password = params[:password]
+  result = find_user_by_username(username)  # Flyttad till model.rb
 
-    if result.nil?
-        return "Fel användarnamn"
-    end
+  if result.nil?
+    return "Fel användarnamn"
+  end
 
-    pwdigest = result["pwdigest"]
-    id = result["id"]
-    username = result["username"]
-    is_admin = result["is_admin"] == 1
-
-    if BCrypt::Password.new(pwdigest) != password
-        return "Fel lösenord"
-    else
-        session[:id] = id
-        session[:username] = username
-        session[:logged_in] = true
-        session[:is_admin] = is_admin
-
-        session.delete(:last_login_attempt)  # Rensa så spärren inte ligger kvar
-        redirect("/user/#{id}")
-    end
+  if BCrypt::Password.new(result["pwdigest"]) != password
+    return "Fel lösenord"
+  else
+    session[:id] = result["id"]
+    session[:username] = result["username"]
+    session[:logged_in] = true
+    session[:is_admin] = result["is_admin"] == 1
+    session.delete(:last_login_attempt)
+    redirect("/user/#{result["id"]}")
+  end
 end
 
-
-
 post('/logout') do
-    session.clear
-    redirect('/')
+  session.clear
+  redirect('/')
 end
 
 post('/users') do
-    username = params[:username]
-    password = params[:password]
-    password_confirm = params[:password_confirm]
-    email = params[:email]
-    phone = params[:phone]
+  username = params[:username]
+  password = params[:password]
+  password_confirm = params[:password_confirm]
+  email = params[:email]
+  phone = params[:phone]
 
-  
-    if (password != password_confirm)
-        "Lösenorden matchar inte..."
-    elsif username.length <= 2
-        "Ditt användarnamn måste innehålla minst 3 karaktärer"
-    elsif !(email.include?("@"))
-        "Din e-post måste innehålla @"
-    else
-        password_digest = BCrypt::Password.create(password)
-      db = SQLite3::Database.new("db/webbshop.db")
-      db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
-      redirect('/')
-    end
+  if (password != password_confirm)
+    "Lösenorden matchar inte..."
+  elsif username.length <= 2
+    "Ditt användarnamn måste innehålla minst 3 karaktärer"
+  elsif !(email.include?("@"))
+    "Din e-post måste innehålla @"
+  else
+    create_user(username, password, email, phone)  # Flyttad till model.rb
+    redirect('/')
+  end
 end
 
-
-
-
-#PRODUKTER
-
+# PRODUKTER
 get('/products') do
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM products")
-
-    slim(:"products/index", locals:{produkt:result})
+  result = fetch_all_products  # Flyttad till model.rb
+  slim(:"products/index", locals:{produkt:result})
 end
 
-#skicka med vilken row (produkt) från show_products, ändra sql
 get('/products/:id') do
-    id = params[:id].to_i
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM products WHERE id = ?",id).first
-
-    slim(:"products/show", locals:{produkt:result})
+  id = params[:id].to_i
+  result = fetch_product_by_id(id)  # Flyttad till model.rb
+  slim(:"products/show", locals:{produkt:result})
 end
 
-#STATISKA SIDOR
-
+# STATISKA SIDOR
 get('/about') do
-    slim(:"about/about_us")
+  slim(:"about/about_us")
 end
 
 get('/contact') do
-    slim(:contact)
+  slim(:contact)
 end
 
-#KONTAKTFRÅGOR
-
+# KONTAKTFRÅGOR
 get('/questions') do
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta alla frågor och svar (om de finns)
-    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
-
-    slim(:"questions/index.slim", locals: { questions: questions })
+  questions = fetch_all_questions  # Flyttad till model.rb
+  slim(:"questions/index", locals: { questions: questions })
 end
 
 post('/questions') do
-    name = params[:name]
-    question = params[:question]
-    user_id = session[:id]  # Hämta användarens id från sessionen
-    created_at = Time.now.strftime('%Y-%m-%d %H:%M:%S')  # Skapa en tidsstämpel i korrekt format
-
-    if name.empty? || question.empty?
-        return "Namnet eller frågan får inte vara tomma!"
-    end
-
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.execute("INSERT INTO questions (user_id, name, question, created_at) VALUES (?, ?, ?, ?)", 
-        [session[:id], name, question, created_at])
-    redirect('/contact')  # Bekräftelse att frågan är skickad eller visa en tack-sida
+  name = params[:name]
+  question = params[:question]
+  user_id = session[:id]
+  created_at = Time.now.to_s
+  add_question(user_id, name, question, created_at)  # Flyttad till model.rb
+  redirect('/contact')
 end
 
-#ADMIN KONTAKTER
-
+# ADMIN KONTAKTER
 get('/admin/questions') do
-
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta alla frågor som användare har skickat
-    questions = db.execute("SELECT * FROM questions ORDER BY created_at DESC")
-
-    slim(:"questions/admin_index", locals: { questions: questions })
+  questions = fetch_all_questions  # Återanvänder
+  slim(:"questions/admin_index", locals: { questions: questions })
 end
 
 get('/admin/questions/:id/answer') do
-
-    question_id = params[:id] #ändrat från chatgpt !!!
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta frågan från databasen
-    question = db.execute("SELECT * FROM questions WHERE id = ?", [question_id]).first
-
-    slim(:"questions/answer", locals: { question: question })
+  question_id = params[:id]
+  question = fetch_question_by_id(question_id)  # Flyttad till model.rb
+  slim(:"questions/answer", locals: { question: question })
 end
-
-
 
 post('/admin/questions/:id/answer') do
+  question_id = params[:id]
+  answer = params[:answer]
 
-    question_id = params[:id]#ändrat från chatgpt !!!
-    answer = params[:answer]
+  if answer.empty?
+    return "Svaret får inte vara tomt!"
+  end
 
-    # Om svaret är tomt, ge ett felmeddelande
-    if answer.empty?
-        return "Svaret får inte vara tomt!"
-    end
-
-    db = SQLite3::Database.new("db/webbshop.db")
-    
-    # Uppdatera frågan med svaret
-    db.execute("UPDATE questions SET answer = ? WHERE id = ?", [answer, question_id])
-
-    redirect('/admin/questions')  # Tillbaka till admin-sidan där alla frågor visas
+  update_question_answer(question_id, answer)  # Flyttad till model.rb
+  redirect('/admin/questions')
 end
 
-
-
-
-
-#VARUKORG
-
+# VARUKORG
 get('/cart') do
-    session[:cart] ||= {}  # Se till att session[:cart] alltid finns
-    @cart = session[:cart].values  # Hämta alla produkter från sessionen direkt
-
-    slim(:cart)  # byta namn till cart !!!!
+  session[:cart] ||= {}
+  @cart = session[:cart].values
+  slim(:cart)
 end
 
 post('/cart') do
-    if params[:quantity].empty?
-        quantity = 1
+  quantity = params[:quantity].empty? ? 1 : params[:quantity].to_i
+  product_id = params[:product_id].to_i
+  session[:cart] ||= {}
+
+  product = fetch_product_by_id(product_id)  # Flyttad till model.rb
+
+  if product
+    if session[:cart].key?(product_id)
+      session[:cart][product_id][:quantity] += quantity
     else
-        quantity = params[:quantity].to_i
+      session[:cart][product_id] = {
+        name: product["namn"], 
+        quantity: quantity, 
+        price: product["pris"],
+        image_url: product["img_url"]
+      }
     end
-    product_id = params[:product_id].to_i
+  end
 
-    session[:cart] ||= {}
-
-    # Hämta produktens namn och pris från databasen och spara i sessionen
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-    product = db.execute("SELECT * FROM products WHERE id = ?",product_id).first
-
-    if product
-        # Uppdatera kvantiteten om produkten finns i varukorgen, annars lägg till den
-        if session[:cart].key?(product_id)
-            session[:cart][product_id][:quantity] += quantity
-        else
-            session[:cart][product_id] = {
-                name: product["namn"], 
-                quantity: quantity, 
-                price: product["pris"],
-                image_url: product["img_url"]
-            }
-        end
-    end
-
-    # Redirect tillbaka till produktens sida
-    redirect("/products/#{product_id}")
+  redirect("/products/#{product_id}")
 end
-
 
 get('/cart/clear') do
-    session[:cart] = {}  # Nollställ varukorgen
-    redirect('/cart')
+  session[:cart] = {}
+  redirect('/cart')
 end
 
-#CHECKOUT / ORDER
-
+# CHECKOUT / ORDER
 get('/checkout') do
-    
-    session[:cart] ||= {}  # Se till att varukorgen alltid finns
-    @cart = session[:cart].values  # Hämta varukorgen för att visa i formuläret
-
-    slim(:checkout)
+  session[:cart] ||= {}
+  @cart = session[:cart].values
+  slim(:checkout)
 end
 
 post('/orders') do
+  name = params[:name]
+  address = params[:address]
+  phone = params[:phone]
+  cart = session[:cart]
 
-    name = params[:name]
-    address = params[:address]
-    phone = params[:phone]
-    cart = session[:cart]  # Hämta beställningsdata från sessionen
+  if cart.empty?
+    redirect('/cart')
+  end
 
-    if cart.empty?
-        redirect('/cart')  # Om varukorgen är tom, skicka tillbaka
-    end
+  order_id = create_order(session[:id], name, address, phone)  # Flyttad till model.rb
+  session[:last_order_id] = order_id
 
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.execute("INSERT INTO orders (user_id, namn, adress, tel_nr) VALUES (?,?,?,?)", [session[:id], name, address, phone])
-    
-    order_id = db.last_insert_row_id  # Hämta senaste order-ID
-    session[:last_order_id] = order_id
+  cart.each do |id, item|
+    add_order_item(order_id, id, item[:quantity], item[:price])  # Flyttad till model.rb
+  end
 
-    cart.each do |id, item|
-        db.execute("INSERT INTO order_items (order_id, produkt_id, kvantitet, pris) VALUES (?,?,?,?)",[order_id,id,item[:quantity],item[:price]])
-        #db.execute("INSERT INTO users (username,pwdigest,mail,telefon_nr) VALUES (?,?,?,?)",[username,password_digest,email,phone])
-    end
-
-    #puts "Inserting into beställning: #{name}, #{address}, #{phone}"
-    #puts "Order ID after insert: #{order_id}"
-    #puts "Cart contents: #{cart}"
-
-    session[:cart] = {}  # Töm varukorgen efter beställning
-    redirect('/orders/confirmation')  # Skicka till bekräftelsesida
+  session[:cart] = {}
+  redirect('/orders/confirmation')
 end
-
 
 get('/orders/confirmation') do
-    # Kontrollera om användaren är inloggad
-
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    order_id = session[:last_order_id]
-    order = db.execute("SELECT * FROM orders WHERE id = ?", [order_id]).first
-    order_items = db.execute(
-        "SELECT order_items.*, products.namn AS produkt_namn
-        FROM order_items
-        JOIN products ON order_items.produkt_id = products.id
-        WHERE order_items.order_id = ?", [order_id]
-    )
-
-
-    slim(:"orders/confirmation", locals: { order: order, order_items: order_items })
-
+  order_id = session[:last_order_id]
+  order = fetch_order_by_id(order_id)  # Flyttad till model.rb
+  order_items = fetch_order_items(order_id)  # Flyttad till model.rb
+  slim(:"orders/confirmation", locals: { order: order, order_items: order_items })
 end
 
-#ADMIN ORDERS
-
+# ADMIN ORDERS
 get('/admin/orders') do
-    # Kontrollera om användaren är inloggad och är admin
-
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta alla beställningar från databasen
-    orders = db.execute("SELECT * FROM orders")
-
-    slim(:"orders/admin_index", locals: { orders: orders })
+  orders = fetch_all_orders  # Flyttad till model.rb
+  slim(:"orders/admin_index", locals: { orders: orders })
 end
 
 get('/admin/orders/:id') do
-    # Kontrollera om användaren är inloggad och är admin
-
-    order_id = params[:id]
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-
-    # Hämta beställningen från databasen
-    order = db.execute("SELECT * FROM orders WHERE id = ?", order_id).first
-
-    # Hämta alla order_items för den beställningen
-    order_items = db.execute("SELECT * FROM order_items WHERE order_id = ?", order_id)
-
-    slim(:"orders/show", locals: { order: order, order_items: order_items })
+  order_id = params[:id]
+  order = fetch_order_by_id(order_id)  # Flyttad till model.rb
+  order_items = fetch_order_items(order_id)  # Flyttad till model.rb
+  slim(:"orders/show", locals: { order: order, order_items: order_items })
 end

@@ -75,7 +75,7 @@
   
   <dl>
       <dt>Includes:</dt>
-      <dd>Model</dd>
+      <dd><span class='object_link'><a href="Model.html" title="Model (module)">Model</a></span></dd>
   </dl>
   
   
@@ -85,8 +85,24 @@
   
 </div>
 
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Model.html" title="Model (module)">Model</a></span>
+    
+  
+    
+  
+</p>
 
 
+
+  <h2>Constant Summary</h2>
+  
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="Model.html" title="Model (module)">Model</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Model.html#DB_PATH-constant" title="Model::DB_PATH (constant)">Model::DB_PATH</a></span></p>
 
 
 
@@ -705,6 +721,16 @@
 
 
   
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Model.html" title="Model (module)">Model</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Model.html#add_order_item-instance_method" title="Model#add_order_item (method)">#add_order_item</a></span>, <span class='object_link'><a href="Model.html#add_question-instance_method" title="Model#add_question (method)">#add_question</a></span>, <span class='object_link'><a href="Model.html#check_user_ownership-instance_method" title="Model#check_user_ownership (method)">#check_user_ownership</a></span>, <span class='object_link'><a href="Model.html#create_order-instance_method" title="Model#create_order (method)">#create_order</a></span>, <span class='object_link'><a href="Model.html#create_user-instance_method" title="Model#create_user (method)">#create_user</a></span>, <span class='object_link'><a href="Model.html#db_connection-instance_method" title="Model#db_connection (method)">#db_connection</a></span>, <span class='object_link'><a href="Model.html#fetch_all_orders-instance_method" title="Model#fetch_all_orders (method)">#fetch_all_orders</a></span>, <span class='object_link'><a href="Model.html#fetch_all_products-instance_method" title="Model#fetch_all_products (method)">#fetch_all_products</a></span>, <span class='object_link'><a href="Model.html#fetch_all_questions-instance_method" title="Model#fetch_all_questions (method)">#fetch_all_questions</a></span>, <span class='object_link'><a href="Model.html#fetch_order_by_id-instance_method" title="Model#fetch_order_by_id (method)">#fetch_order_by_id</a></span>, <span class='object_link'><a href="Model.html#fetch_order_items-instance_method" title="Model#fetch_order_items (method)">#fetch_order_items</a></span>, <span class='object_link'><a href="Model.html#fetch_order_items_raw-instance_method" title="Model#fetch_order_items_raw (method)">#fetch_order_items_raw</a></span>, <span class='object_link'><a href="Model.html#fetch_product_by_id-instance_method" title="Model#fetch_product_by_id (method)">#fetch_product_by_id</a></span>, <span class='object_link'><a href="Model.html#fetch_question_by_id-instance_method" title="Model#fetch_question_by_id (method)">#fetch_question_by_id</a></span>, <span class='object_link'><a href="Model.html#fetch_two_products-instance_method" title="Model#fetch_two_products (method)">#fetch_two_products</a></span>, <span class='object_link'><a href="Model.html#find_product_for_cart-instance_method" title="Model#find_product_for_cart (method)">#find_product_for_cart</a></span>, <span class='object_link'><a href="Model.html#find_user_by_id-instance_method" title="Model#find_user_by_id (method)">#find_user_by_id</a></span>, <span class='object_link'><a href="Model.html#find_user_by_username-instance_method" title="Model#find_user_by_username (method)">#find_user_by_username</a></span>, <span class='object_link'><a href="Model.html#update_question_answer-instance_method" title="Model#update_question_answer (method)">#update_question_answer</a></span></p>
+
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
@@ -765,7 +791,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 26</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_two_products'>fetch_two_products</span>  <span class='comment'># Fetches two products from the database
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_two_products'><span class='object_link'><a href="Model.html#fetch_two_products-instance_method" title="Model#fetch_two_products (method)">fetch_two_products</a></span></span>  <span class='comment'># Fetches two products from the database
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;home/index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span><span class='lbrace'>{</span><span class='label'>produkt:</span><span class='id identifier rubyid_result'>result</span><span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -828,7 +854,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 26</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_two_products'>fetch_two_products</span>  <span class='comment'># Fetches two products from the database
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_two_products'><span class='object_link'><a href="Model.html#fetch_two_products-instance_method" title="Model#fetch_two_products (method)">fetch_two_products</a></span></span>  <span class='comment'># Fetches two products from the database
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;home/index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span><span class='lbrace'>{</span><span class='label'>produkt:</span><span class='id identifier rubyid_result'>result</span><span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -952,7 +978,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 315</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/admin/orders</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_orders'>orders</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_orders'>fetch_all_orders</span>  <span class='comment'># Fetches all orders for the admin panel
+  <span class='id identifier rubyid_orders'>orders</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_orders'><span class='object_link'><a href="Model.html#fetch_all_orders-instance_method" title="Model#fetch_all_orders (method)">fetch_all_orders</a></span></span>  <span class='comment'># Fetches all orders for the admin panel
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;orders/admin_index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>orders:</span> <span class='id identifier rubyid_orders'>orders</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1038,8 +1064,8 @@
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/admin/orders/:id</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_order_id'>order_id</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_by_id'>fetch_order_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the order by ID
-</span>  <span class='id identifier rubyid_order_items'>order_items</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_items'>fetch_order_items</span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the items for the order
+  <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_by_id'><span class='object_link'><a href="Model.html#fetch_order_by_id-instance_method" title="Model#fetch_order_by_id (method)">fetch_order_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the order by ID
+</span>  <span class='id identifier rubyid_order_items'>order_items</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_items'><span class='object_link'><a href="Model.html#fetch_order_items-instance_method" title="Model#fetch_order_items (method)">fetch_order_items</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the items for the order
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;orders/show&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>order:</span> <span class='id identifier rubyid_order'>order</span><span class='comma'>,</span> <span class='label'>order_items:</span> <span class='id identifier rubyid_order_items'>order_items</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1102,7 +1128,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 188</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/admin/questions</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_questions'>questions</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_questions'>fetch_all_questions</span>  <span class='comment'># Fetches all questions for the admin panel
+  <span class='id identifier rubyid_questions'>questions</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_questions'><span class='object_link'><a href="Model.html#fetch_all_questions-instance_method" title="Model#fetch_all_questions (method)">fetch_all_questions</a></span></span>  <span class='comment'># Fetches all questions for the admin panel
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;questions/admin_index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>questions:</span> <span class='id identifier rubyid_questions'>questions</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1187,7 +1213,7 @@
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/admin/questions/:id/answer</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_question_id'>question_id</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_question'>question</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_question_by_id'>fetch_question_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_question_id'>question_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the question by ID
+  <span class='id identifier rubyid_question'>question</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_question_by_id'><span class='object_link'><a href="Model.html#fetch_question_by_id-instance_method" title="Model#fetch_question_by_id (method)">fetch_question_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_question_id'>question_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the question by ID
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;questions/answer&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>question:</span> <span class='id identifier rubyid_question'>question</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1568,8 +1594,8 @@
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/orders/confirmation</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_order_id'>order_id</span> <span class='op'>=</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:last_order_id</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_by_id'>fetch_order_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the order by ID
-</span>  <span class='id identifier rubyid_order_items'>order_items</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_items'>fetch_order_items</span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the items for the order
+  <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_by_id'><span class='object_link'><a href="Model.html#fetch_order_by_id-instance_method" title="Model#fetch_order_by_id (method)">fetch_order_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the order by ID
+</span>  <span class='id identifier rubyid_order_items'>order_items</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_order_items'><span class='object_link'><a href="Model.html#fetch_order_items-instance_method" title="Model#fetch_order_items (method)">fetch_order_items</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the items for the order
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;orders/confirmation&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>order:</span> <span class='id identifier rubyid_order'>order</span><span class='comma'>,</span> <span class='label'>order_items:</span> <span class='id identifier rubyid_order_items'>order_items</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1632,7 +1658,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 133</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/products</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_products'>fetch_all_products</span>  <span class='comment'># Fetches all products from the database
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_products'><span class='object_link'><a href="Model.html#fetch_all_products-instance_method" title="Model#fetch_all_products (method)">fetch_all_products</a></span></span>  <span class='comment'># Fetches all products from the database
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;products/index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span><span class='lbrace'>{</span><span class='label'>produkt:</span><span class='id identifier rubyid_result'>result</span><span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1717,7 +1743,7 @@
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/products/:id</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_product_by_id'>fetch_product_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the product by ID
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_product_by_id'><span class='object_link'><a href="Model.html#fetch_product_by_id-instance_method" title="Model#fetch_product_by_id (method)">fetch_product_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the product by ID
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;products/show&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span><span class='lbrace'>{</span><span class='label'>produkt:</span><span class='id identifier rubyid_result'>result</span><span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1780,7 +1806,7 @@
       <pre class="code"><span class="info file"># File 'app.rb', line 165</span>
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/questions</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_questions'>questions</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_questions'>fetch_all_questions</span>  <span class='comment'># Fetches all questions from the database
+  <span class='id identifier rubyid_questions'>questions</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_all_questions'><span class='object_link'><a href="Model.html#fetch_all_questions-instance_method" title="Model#fetch_all_questions (method)">fetch_all_questions</a></span></span>  <span class='comment'># Fetches all questions from the database
 </span>  <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;questions/index&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> <span class='label'>questions:</span> <span class='id identifier rubyid_questions'>questions</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1871,10 +1897,10 @@
 
 <span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/user/:id</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_requested_id'>requested_id</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
-  <span class='id identifier rubyid_owner_id'>owner_id</span> <span class='op'>=</span> <span class='id identifier rubyid_check_user_ownership'>check_user_ownership</span><span class='lparen'>(</span><span class='id identifier rubyid_requested_id'>requested_id</span><span class='rparen'>)</span>  <span class='comment'># Checks if the user owns the profile
+  <span class='id identifier rubyid_owner_id'>owner_id</span> <span class='op'>=</span> <span class='id identifier rubyid_check_user_ownership'><span class='object_link'><a href="Model.html#check_user_ownership-instance_method" title="Model#check_user_ownership (method)">check_user_ownership</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_requested_id'>requested_id</span><span class='rparen'>)</span>  <span class='comment'># Checks if the user owns the profile
 </span>
   <span class='kw'>if</span> <span class='id identifier rubyid_owner_id'>owner_id</span> <span class='op'>==</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_find_user_by_id'>find_user_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_requested_id'>requested_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the user&#39;s details
+    <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_find_user_by_id'><span class='object_link'><a href="Model.html#find_user_by_id-instance_method" title="Model#find_user_by_id (method)">find_user_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_requested_id'>requested_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the user&#39;s details
 </span>    <span class='id identifier rubyid_slim'>slim</span><span class='lparen'>(</span><span class='symbol'>:&quot;users/show&quot;</span><span class='comma'>,</span> <span class='label'>locals:</span><span class='lbrace'>{</span><span class='label'>users:</span> <span class='id identifier rubyid_result'>result</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>else</span>
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Aja baja inte hacka!</span><span class='tstring_end'>&quot;</span></span>  <span class='comment'># Displays a warning if the user is trying to hack
@@ -2051,7 +2077,7 @@
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Svaret får inte vara tomt!</span><span class='tstring_end'>&quot;</span></span>  <span class='comment'># Message for empty answer
 </span>  <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_update_question_answer'>update_question_answer</span><span class='lparen'>(</span><span class='id identifier rubyid_question_id'>question_id</span><span class='comma'>,</span> <span class='id identifier rubyid_answer'>answer</span><span class='rparen'>)</span>  <span class='comment'># Updates the question&#39;s answer in the database
+  <span class='id identifier rubyid_update_question_answer'><span class='object_link'><a href="Model.html#update_question_answer-instance_method" title="Model#update_question_answer (method)">update_question_answer</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_question_id'>question_id</span><span class='comma'>,</span> <span class='id identifier rubyid_answer'>answer</span><span class='rparen'>)</span>  <span class='comment'># Updates the question&#39;s answer in the database
 </span>  <span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/admin/questions</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -2172,7 +2198,7 @@
   <span class='id identifier rubyid_product_id'>product_id</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:product_id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
   <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:cart</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
 
-  <span class='id identifier rubyid_product'>product</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_product_by_id'>fetch_product_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_product_id'>product_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the product by ID
+  <span class='id identifier rubyid_product'>product</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch_product_by_id'><span class='object_link'><a href="Model.html#fetch_product_by_id-instance_method" title="Model#fetch_product_by_id (method)">fetch_product_by_id</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_product_id'>product_id</span><span class='rparen'>)</span>  <span class='comment'># Fetches the product by ID
 </span>
   <span class='kw'>if</span> <span class='id identifier rubyid_product'>product</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:cart</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_product_id'>product_id</span><span class='rparen'>)</span>
@@ -2319,7 +2345,7 @@
 
   <span class='id identifier rubyid_username'>username</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:username</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_password'>password</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:password</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_find_user_by_username'>find_user_by_username</span><span class='lparen'>(</span><span class='id identifier rubyid_username'>username</span><span class='rparen'>)</span>  <span class='comment'># Fetches the user by username
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_find_user_by_username'><span class='object_link'><a href="Model.html#find_user_by_username-instance_method" title="Model#find_user_by_username (method)">find_user_by_username</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_username'>username</span><span class='rparen'>)</span>  <span class='comment'># Fetches the user by username
 </span>
   <span class='kw'>if</span> <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Fel användarnamn</span><span class='tstring_end'>&quot;</span></span>  <span class='comment'># Error message for invalid username
@@ -2552,11 +2578,11 @@
     <span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/cart</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>  <span class='comment'># Redirects to the cart if it&#39;s empty
 </span>  <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_order_id'>order_id</span> <span class='op'>=</span> <span class='id identifier rubyid_create_order'>create_order</span><span class='lparen'>(</span><span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_phone'>phone</span><span class='rparen'>)</span>  <span class='comment'># Creates the order in the database
+  <span class='id identifier rubyid_order_id'>order_id</span> <span class='op'>=</span> <span class='id identifier rubyid_create_order'><span class='object_link'><a href="Model.html#create_order-instance_method" title="Model#create_order (method)">create_order</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_phone'>phone</span><span class='rparen'>)</span>  <span class='comment'># Creates the order in the database
 </span>  <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:last_order_id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_order_id'>order_id</span>
 
   <span class='id identifier rubyid_cart'>cart</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
-    <span class='id identifier rubyid_add_order_item'>add_order_item</span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='symbol'>:quantity</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='symbol'>:price</span><span class='rbracket'>]</span><span class='rparen'>)</span>  <span class='comment'># Adds each item to the order
+    <span class='id identifier rubyid_add_order_item'><span class='object_link'><a href="Model.html#add_order_item-instance_method" title="Model#add_order_item (method)">add_order_item</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_order_id'>order_id</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='symbol'>:quantity</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='symbol'>:price</span><span class='rbracket'>]</span><span class='rparen'>)</span>  <span class='comment'># Adds each item to the order
 </span>  <span class='kw'>end</span>
 
   <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:cart</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -2682,7 +2708,7 @@
   <span class='id identifier rubyid_question'>question</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:question</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_user_id'>user_id</span> <span class='op'>=</span> <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_created_at'>created_at</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
-  <span class='id identifier rubyid_add_question'>add_question</span><span class='lparen'>(</span><span class='id identifier rubyid_user_id'>user_id</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_question'>question</span><span class='comma'>,</span> <span class='id identifier rubyid_created_at'>created_at</span><span class='rparen'>)</span>  <span class='comment'># Adds the question to the database
+  <span class='id identifier rubyid_add_question'><span class='object_link'><a href="Model.html#add_question-instance_method" title="Model#add_question (method)">add_question</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_user_id'>user_id</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_question'>question</span><span class='comma'>,</span> <span class='id identifier rubyid_created_at'>created_at</span><span class='rparen'>)</span>  <span class='comment'># Adds the question to the database
 </span>  <span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/contact</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -2856,7 +2882,7 @@
 </span>  <span class='kw'>elsif</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_email'>email</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>@</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Din e-post måste innehålla @</span><span class='tstring_end'>&quot;</span></span>  <span class='comment'># Error message for invalid email format
 </span>  <span class='kw'>else</span>
-    <span class='id identifier rubyid_create_user'>create_user</span><span class='lparen'>(</span><span class='id identifier rubyid_username'>username</span><span class='comma'>,</span> <span class='id identifier rubyid_password'>password</span><span class='comma'>,</span> <span class='id identifier rubyid_email'>email</span><span class='comma'>,</span> <span class='id identifier rubyid_phone'>phone</span><span class='rparen'>)</span>  <span class='comment'># Creates the user in the database
+    <span class='id identifier rubyid_create_user'><span class='object_link'><a href="Model.html#create_user-instance_method" title="Model#create_user (method)">create_user</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_username'>username</span><span class='comma'>,</span> <span class='id identifier rubyid_password'>password</span><span class='comma'>,</span> <span class='id identifier rubyid_email'>email</span><span class='comma'>,</span> <span class='id identifier rubyid_phone'>phone</span><span class='rparen'>)</span>  <span class='comment'># Creates the user in the database
 </span>    <span class='id identifier rubyid_redirect'>redirect</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -2870,7 +2896,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri May  2 19:09:56 2025 by
+  Generated on Fri May  2 19:13:59 2025 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.2.2).
 </div>

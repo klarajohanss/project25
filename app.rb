@@ -27,13 +27,21 @@ get('/') do
 end
 
 get('/user/:id') do
-    id = session[:id].to_i
+    requested_id = params[:id].to_i
+  
     db = SQLite3::Database.new("db/webbshop.db")
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM users WHERE id = ?",id)
-    p "användarnamn: #{result}"
-    slim(:"users/show", locals:{users:result})
+  
+    owner = db.execute("SELECT id FROM users WHERE id = ?", requested_id).first
+  
+    if owner && owner["id"] == session[:id]
+      result = db.execute("SELECT * FROM users WHERE id = ?", requested_id)
+      slim(:"users/show", locals:{users: result})
+    else
+        return "Aja baja inte hacka!"
+    end
 end
+  
 
 #LOGIN / REGISTRERING
 get('/login') do

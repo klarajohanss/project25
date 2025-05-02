@@ -3,6 +3,7 @@ require 'slim'
 require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
+require_relative './model.rb'
 enable :sessions
 set :public_folder, 'public'
 
@@ -19,10 +20,7 @@ end
   
 #HEM
 get('/') do
-    db = SQLite3::Database.new("db/webbshop.db")
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM products LIMIT 2") 
-
+    result = fetch_two_products
     slim(:"home/index", locals:{produkt:result})
 end
 
